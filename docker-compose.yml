@@ -1,0 +1,8 @@
+services:
+  floris-backend:
+    image: floris-backend
+    ports:
+      - "3000:3000"
+    build:
+      context: .
+      dockerfile: Dockerfile
