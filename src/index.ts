@@ -1,21 +1,26 @@
 import express from 'express';
 import AuthController from './auth/authController';
 import UserController from './user/userController';
+import ProductController from './product/productController';
+import ProductModel from './product/productModel';
 
 var bodyParser = require('body-parser');
+var cors = require('cors');
 
 var admin = require("firebase-admin");
 
 var serviceAccount = require("../key/kombet-floris-firebase-adminsdk.json");
 const firebaseApp = admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: "gs://kombet-floris.appspot.com"
 });
 
 const app = express();
 const port = 3000;
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true , limit: '50mb'}));
 app.use(bodyParser.json());
+app.use(cors());
 
 app.get('/', (req: any, res: any) => {
   res.send('The sedulous hyena ate the antelope!');
@@ -76,6 +81,86 @@ app.post('/api/v1/login', async (req: any, res: any) => {
   catch(err: any){
     res.status(400).send(err.message);
   }
+});
+
+app.post('/api/v1/category/papan-bunga/add-product', async (req: any, res: any) => {
+  const productController = new ProductController(firebaseApp);
+  productController.saveProduct(
+    new ProductModel(
+      {
+        name: req.body.name,
+        variants: JSON.parse(req.body.variants),
+        images: JSON.parse(req.body.images),
+        description: req.body.description
+      }
+    ),
+    "papan-bunga");
+
+    res.status(200).send(
+      {
+        message: "success"
+      }
+    );
+});
+
+app.post('/api/v1/category/bouquet/add-product', async (req: any, res: any) => {
+  const productController = new ProductController(firebaseApp);
+  productController.saveProduct(
+    new ProductModel(
+      {
+        name: req.body.name,
+        variants: JSON.parse(req.body.variants),
+        images: JSON.parse(req.body.images),
+        description: req.body.description
+      }
+    ),
+    "bouquet");
+
+    res.status(200).send(
+      {
+        message: "success"
+      }
+    );
+});
+
+app.post('/api/v1/category/bunga-papan/money-cake', async (req: any, res: any) => {
+  const productController = new ProductController(firebaseApp);
+  productController.saveProduct(
+    new ProductModel(
+      {
+        name: req.body.name,
+        variants: JSON.parse(req.body.variants),
+        images: JSON.parse(req.body.images),
+        description: req.body.description
+      }
+    ),
+    "money-cake");
+
+    res.status(200).send(
+      {
+        message: "success"
+      }
+    );
+});
+
+app.post('/api/v1/category/bunga-papan/snack-tower', async (req: any, res: any) => {
+  const productController = new ProductController(firebaseApp);
+  productController.saveProduct(
+    new ProductModel(
+      {
+        name: req.body.name,
+        variants: JSON.parse(req.body.variants),
+        images: JSON.parse(req.body.images),
+        description: req.body.description
+      }
+    ),
+    "snack-tower");
+
+    res.status(200).send(
+      {
+        message: "success"
+      }
+    );
 });
 
 app.listen(port, () => {

@@ -5,7 +5,7 @@ export default class UserModel {
     id: string;
     email: string;
     password: string;
-    createdAt: Date;
+    createdAt: string;
     banned: boolean;
     isAdmin: boolean;
 
@@ -21,7 +21,7 @@ export default class UserModel {
             id: string,
             email: string,
             password: string,
-            createdAt: Date,
+            createdAt: string,
             banned: boolean,
             isAdmin: boolean
         }

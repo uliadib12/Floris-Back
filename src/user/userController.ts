@@ -8,7 +8,7 @@ export default class UserController {
         this.firestore = getFirestore(firebaseApp);
     }
 
-    public async getUserById(id: string): Promise<UserModel> {
+    public async getUserById(id: string){
         const userRef = this.firestore.collection('users').doc(id);
         const userDoc = await userRef.get();
 
@@ -18,16 +18,12 @@ export default class UserController {
 
         const user = userDoc.data() as UserModel;
 
-        const userModel = new UserModel({
+        return {
             id: userDoc.id,
             email: user.email,
-            password: user.password,
             createdAt: user.createdAt,
-            banned: user.banned,
-            isAdmin: user.isAdmin
-        });
-
-        return userModel;
+            banned: user.banned
+        }
     }
 
     public async getAllUsers() {
@@ -51,7 +47,7 @@ export default class UserController {
             users.push({
                 id: userDoc.id,
                 email: user.email,
-                createdAt: user.createdAt,
+                createdAt: user.createdAt.toDate(),
                 banned: user.banned
             });
         });
