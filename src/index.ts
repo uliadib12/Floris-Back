@@ -191,6 +191,50 @@ app.post('/api/v1/category/snack-tower/add-product', async (req: any, res: any) 
     );
 });
 
+app.delete('/api/v1/category/papan-bunga/delete-product', async (req: any, res: any) => {
+  const productController = new ProductController(firebaseApp);
+  productController.deleteProduct(req.body.id, "papan-bunga");
+
+  res.status(200).send(
+    {
+      message: "success"
+    }
+  );
+});
+
+app.delete('/api/v1/category/bouquet/delete-product', async (req: any, res: any) => {
+  const productController = new ProductController(firebaseApp);
+  productController.deleteProduct(req.body.id, "bouquet");
+
+  res.status(200).send(
+    {
+      message: "success"
+    }
+  );
+});
+
+app.delete('/api/v1/category/money-cake/delete-product', async (req: any, res: any) => {
+  const productController = new ProductController(firebaseApp);
+  productController.deleteProduct(req.body.id, "money-cake");
+
+  res.status(200).send(
+    {
+      message: "success"
+    }
+  );
+});
+
+app.delete('/api/v1/category/snack-tower/delete-product', async (req: any, res: any) => {
+  const productController = new ProductController(firebaseApp);
+  productController.deleteProduct(req.body.id, "snack-tower");
+
+  res.status(200).send(
+    {
+      message: "success"
+    }
+  );
+});
+
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });

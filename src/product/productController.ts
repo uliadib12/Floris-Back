@@ -89,4 +89,12 @@ export default class ProductController {
 
         return imageUrls;
     }
+
+    public async deleteProduct(id: string, type: string) {
+        const productRef = this.firestore.collection('products').doc(id);
+        await productRef.delete();
+
+        const productTypeRef = this.firestore.collection(type).doc(id);
+        await productTypeRef.delete();
+    }
 }
