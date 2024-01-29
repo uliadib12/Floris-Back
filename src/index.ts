@@ -151,7 +151,7 @@ app.post('/api/v1/category/bouquet/add-product', async (req: any, res: any) => {
     );
 });
 
-app.post('/api/v1/category/bunga-papan/money-cake', async (req: any, res: any) => {
+app.post('/api/v1/category/money-cake/add-product', async (req: any, res: any) => {
   const productController = new ProductController(firebaseApp);
   productController.saveProduct(
     new ProductModel(
@@ -171,7 +171,7 @@ app.post('/api/v1/category/bunga-papan/money-cake', async (req: any, res: any) =
     );
 });
 
-app.post('/api/v1/category/bunga-papan/snack-tower', async (req: any, res: any) => {
+app.post('/api/v1/category/snack-tower/add-product', async (req: any, res: any) => {
   const productController = new ProductController(firebaseApp);
   productController.saveProduct(
     new ProductModel(

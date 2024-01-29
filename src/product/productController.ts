@@ -34,7 +34,7 @@ export default class ProductController {
     }
 
     public base64ToImage(base64: string) {
-        const base64Data = base64.replace(/^data:image\/png;base64,/, "");
+        const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
         const image = Buffer.from(base64Data, 'base64');
         return image;
     }
@@ -76,14 +76,10 @@ export default class ProductController {
         for (let i = 0; i < images.length; i++) {
             const image = images[i];
             const imageBuffer = this.base64ToImage(image);
-            const imageFileName = `${product.name}-${i}.png`;
+            const imageFileName = `${product.name}-${i}.${image.split(';')[0].split('/')[1]}`;
             const bucket = this.storage.bucket();
             const file = bucket.file(`products/${imageFileName}`);
-            await file.save(imageBuffer, {
-                metadata: {
-                    contentType: 'image/png'
-                }
-            });
+            await file.save(imageBuffer);
             const imageUrl = await file.getSignedUrl({
                 action: 'read',
                 expires: '03-09-2491'
