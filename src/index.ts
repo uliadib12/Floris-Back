@@ -40,14 +40,14 @@ app.get('/api/v1/category/bouquet', async (req: any, res: any) => {
   res.status(200).send(products);
 });
 
-app.get('/api/v1/category/bunga-papan/money-cake', async (req: any, res: any) => {
+app.get('/api/v1/category/money-cake', async (req: any, res: any) => {
   const productController = new ProductController(firebaseApp);
   const products = await productController.getProducts("money-cake");
 
   res.status(200).send(products);
 });
 
-app.get('/api/v1/category/bunga-papan/snack-tower', async (req: any, res: any) => {
+app.get('/api/v1/category/snack-tower', async (req: any, res: any) => {
   const productController = new ProductController(firebaseApp);
   const products = await productController.getProducts("snack-tower");
 

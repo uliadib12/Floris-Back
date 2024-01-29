@@ -15,19 +15,44 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const authController_1 = __importDefault(require("./auth/authController"));
 const userController_1 = __importDefault(require("./user/userController"));
+const productController_1 = __importDefault(require("./product/productController"));
+const productModel_1 = __importDefault(require("./product/productModel"));
 var bodyParser = require('body-parser');
+var cors = require('cors');
 var admin = require("firebase-admin");
 var serviceAccount = require("../key/kombet-floris-firebase-adminsdk.json");
 const firebaseApp = admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(serviceAccount),
+    storageBucket: "gs://kombet-floris.appspot.com"
 });
 const app = (0, express_1.default)();
 const port = 3000;
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(bodyParser.json());
+app.use(cors());
 app.get('/', (req, res) => {
     res.send('The sedulous hyena ate the antelope!');
 });
+app.get('/api/v1/category/papan-bunga', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productController = new productController_1.default(firebaseApp);
+    const products = yield productController.getProducts("papan-bunga");
+    res.status(200).send(products);
+}));
+app.get('/api/v1/category/bouquet', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productController = new productController_1.default(firebaseApp);
+    const products = yield productController.getProducts("bouquet");
+    res.status(200).send(products);
+}));
+app.get('/api/v1/category/money-cake', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productController = new productController_1.default(firebaseApp);
+    const products = yield productController.getProducts("money-cake");
+    res.status(200).send(products);
+}));
+app.get('/api/v1/category/snack-tower', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productController = new productController_1.default(firebaseApp);
+    const products = yield productController.getProducts("snack-tower");
+    res.status(200).send(products);
+}));
 app.get('/api/v1/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userController = new userController_1.default(firebaseApp);
@@ -67,6 +92,54 @@ app.post('/api/v1/login', (req, res) => __awaiter(void 0, void 0, void 0, functi
     catch (err) {
         res.status(400).send(err.message);
     }
+}));
+app.post('/api/v1/category/papan-bunga/add-product', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productController = new productController_1.default(firebaseApp);
+    productController.saveProduct(new productModel_1.default({
+        name: req.body.name,
+        variants: JSON.parse(req.body.variants),
+        images: JSON.parse(req.body.images),
+        description: req.body.description
+    }), "papan-bunga");
+    res.status(200).send({
+        message: "success"
+    });
+}));
+app.post('/api/v1/category/bouquet/add-product', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productController = new productController_1.default(firebaseApp);
+    productController.saveProduct(new productModel_1.default({
+        name: req.body.name,
+        variants: JSON.parse(req.body.variants),
+        images: JSON.parse(req.body.images),
+        description: req.body.description
+    }), "bouquet");
+    res.status(200).send({
+        message: "success"
+    });
+}));
+app.post('/api/v1/category/bunga-papan/money-cake', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productController = new productController_1.default(firebaseApp);
+    productController.saveProduct(new productModel_1.default({
+        name: req.body.name,
+        variants: JSON.parse(req.body.variants),
+        images: JSON.parse(req.body.images),
+        description: req.body.description
+    }), "money-cake");
+    res.status(200).send({
+        message: "success"
+    });
+}));
+app.post('/api/v1/category/bunga-papan/snack-tower', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productController = new productController_1.default(firebaseApp);
+    productController.saveProduct(new productModel_1.default({
+        name: req.body.name,
+        variants: JSON.parse(req.body.variants),
+        images: JSON.parse(req.body.images),
+        description: req.body.description
+    }), "snack-tower");
+    res.status(200).send({
+        message: "success"
+    });
 }));
 app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);

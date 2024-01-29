@@ -43,7 +43,7 @@ class UserController {
                 users.push({
                     id: userDoc.id,
                     email: user.email,
-                    createdAt: user.createdAt,
+                    createdAt: user.createdAt.toDate(),
                     banned: user.banned
                 });
             });
