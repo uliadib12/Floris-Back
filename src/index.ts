@@ -26,6 +26,34 @@ app.get('/', (req: any, res: any) => {
   res.send('The sedulous hyena ate the antelope!');
 });
 
+app.get('/api/v1/category/papan-bunga', async (req: any, res: any) => {
+  const productController = new ProductController(firebaseApp);
+  const products = await productController.getProducts("papan-bunga");
+
+  res.status(200).send(products);
+});
+
+app.get('/api/v1/category/bouquet', async (req: any, res: any) => {
+  const productController = new ProductController(firebaseApp);
+  const products = await productController.getProducts("bouquet");
+
+  res.status(200).send(products);
+});
+
+app.get('/api/v1/category/bunga-papan/money-cake', async (req: any, res: any) => {
+  const productController = new ProductController(firebaseApp);
+  const products = await productController.getProducts("money-cake");
+
+  res.status(200).send(products);
+});
+
+app.get('/api/v1/category/bunga-papan/snack-tower', async (req: any, res: any) => {
+  const productController = new ProductController(firebaseApp);
+  const products = await productController.getProducts("snack-tower");
+
+  res.status(200).send(products);
+});
+
 app.get('/api/v1/users', async (req: any, res: any) => {
   try{
     const userController = new UserController(firebaseApp);

@@ -11,6 +11,21 @@ export default class ProductController {
         this.storage = getStorage();
     }
 
+    public async getProducts(type: string) {
+        const productRef = this.firestore.collection(type);
+        const productsDoc = await productRef.get();
+        const products: any[] = [];
+
+        productsDoc.forEach((doc) => {
+            products.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+
+        return products;
+    }
+
     public async saveProduct(product: ProductModel, type: string) {
         const imageUrls = await this.saveImageToStorage(product);
 
