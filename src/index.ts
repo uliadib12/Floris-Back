@@ -1,5 +1,6 @@
 import express from 'express';
 import AuthController from './auth/authController';
+import UserController from './user/userController';
 
 var bodyParser = require('body-parser');
 
@@ -18,6 +19,19 @@ app.use(bodyParser.json());
 
 app.get('/', (req: any, res: any) => {
   res.send('The sedulous hyena ate the antelope!');
+});
+
+app.get('/api/v1/users', async (req: any, res: any) => {
+  try{
+    const userController = new UserController(firebaseApp);
+
+    const users = await userController.getAllUsers();
+
+    res.status(200).send(users);
+  }
+  catch(err: any){
+    res.status(400).send(err.message);
+  }
 });
 
 app.post('/api/v1/register', async (req: any, res: any) => {

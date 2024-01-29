@@ -1,5 +1,5 @@
 import { getFirestore } from "firebase-admin/firestore";
-import UserModel from "./userModel";
+import UserModel from "../user/userModel";
 
 export default class AuthController {
     firestore : FirebaseFirestore.Firestore;
