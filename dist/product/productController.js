@@ -35,7 +35,7 @@ class ProductController {
         });
     }
     base64ToImage(base64) {
-        const base64Data = base64.replace(/^data:image\/png;base64,/, "");
+        const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
         const image = Buffer.from(base64Data, 'base64');
         return image;
     }
@@ -73,14 +73,10 @@ class ProductController {
             for (let i = 0; i < images.length; i++) {
                 const image = images[i];
                 const imageBuffer = this.base64ToImage(image);
-                const imageFileName = `${product.name}-${i}.png`;
+                const imageFileName = `${product.name}-${i}.${image.split(';')[0].split('/')[1]}`;
                 const bucket = this.storage.bucket();
                 const file = bucket.file(`products/${imageFileName}`);
-                yield file.save(imageBuffer, {
-                    metadata: {
-                        contentType: 'image/png'
-                    }
-                });
+                yield file.save(imageBuffer);
                 const imageUrl = yield file.getSignedUrl({
                     action: 'read',
                     expires: '03-09-2491'
@@ -88,6 +84,14 @@ class ProductController {
                 imageUrls.push(imageUrl[0]);
             }
             return imageUrls;
+        });
+    }
+    deleteProduct(id, type) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const productRef = this.firestore.collection('products').doc(id);
+            yield productRef.delete();
+            const productTypeRef = this.firestore.collection(type).doc(id);
+            yield productTypeRef.delete();
         });
     }
 }

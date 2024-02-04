@@ -11,6 +11,16 @@ export default class ProductController {
         this.storage = getStorage();
     }
 
+    public async getProductById(id: string) {
+        const productRef = this.firestore.collection('products').doc(id);
+        const productDoc = await productRef.get();
+
+        return {
+            id: productDoc.id,
+            ...productDoc.data()
+        };
+    }
+
     public async getProducts(type: string) {
         const productRef = this.firestore.collection(type);
         const productsDoc = await productRef.get();

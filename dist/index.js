@@ -117,7 +117,7 @@ app.post('/api/v1/category/bouquet/add-product', (req, res) => __awaiter(void 0,
         message: "success"
     });
 }));
-app.post('/api/v1/category/bunga-papan/money-cake', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post('/api/v1/category/money-cake/add-product', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const productController = new productController_1.default(firebaseApp);
     productController.saveProduct(new productModel_1.default({
         name: req.body.name,
@@ -129,7 +129,7 @@ app.post('/api/v1/category/bunga-papan/money-cake', (req, res) => __awaiter(void
         message: "success"
     });
 }));
-app.post('/api/v1/category/bunga-papan/snack-tower', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post('/api/v1/category/snack-tower/add-product', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const productController = new productController_1.default(firebaseApp);
     productController.saveProduct(new productModel_1.default({
         name: req.body.name,
@@ -137,6 +137,34 @@ app.post('/api/v1/category/bunga-papan/snack-tower', (req, res) => __awaiter(voi
         images: JSON.parse(req.body.images),
         description: req.body.description
     }), "snack-tower");
+    res.status(200).send({
+        message: "success"
+    });
+}));
+app.delete('/api/v1/category/papan-bunga/delete-product', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productController = new productController_1.default(firebaseApp);
+    productController.deleteProduct(req.body.id, "papan-bunga");
+    res.status(200).send({
+        message: "success"
+    });
+}));
+app.delete('/api/v1/category/bouquet/delete-product', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productController = new productController_1.default(firebaseApp);
+    productController.deleteProduct(req.body.id, "bouquet");
+    res.status(200).send({
+        message: "success"
+    });
+}));
+app.delete('/api/v1/category/money-cake/delete-product', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productController = new productController_1.default(firebaseApp);
+    productController.deleteProduct(req.body.id, "money-cake");
+    res.status(200).send({
+        message: "success"
+    });
+}));
+app.delete('/api/v1/category/snack-tower/delete-product', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productController = new productController_1.default(firebaseApp);
+    productController.deleteProduct(req.body.id, "snack-tower");
     res.status(200).send({
         message: "success"
     });

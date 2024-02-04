@@ -3,6 +3,8 @@ import AuthController from './auth/authController';
 import UserController from './user/userController';
 import ProductController from './product/productController';
 import ProductModel from './product/productModel';
+import OrderController from './order/orderController';
+import EmailController from './email/emailController';
 
 var bodyParser = require('body-parser');
 var cors = require('cors');
@@ -24,6 +26,13 @@ app.use(cors());
 
 app.get('/', (req: any, res: any) => {
   res.send('The sedulous hyena ate the antelope!');
+});
+
+app.get('/api/v1/product/:id', async (req: any, res: any) => {
+  const productController = new ProductController(firebaseApp);
+  const product = await productController.getProductById(req.params.id);
+
+  res.status(200).send(product);
 });
 
 app.get('/api/v1/category/papan-bunga', async (req: any, res: any) => {
@@ -81,6 +90,93 @@ app.post('/api/v1/register', async (req: any, res: any) => {
     res.status(200).send(
       {
         token: token
+      }
+    );
+  }
+  catch(err: any){
+    res.status(400).send(err.message);
+  }
+});
+
+app.get('/api/v1/orders', async (req: any, res: any) => {
+  try{
+    const orderController = new OrderController(firebaseApp);
+
+    const orders = await orderController.getOrders();
+
+    res.status(200).send(orders);
+  }
+  catch(err: any){
+    res.status(400).send(err.message);
+  }
+});
+
+app.get('/api/v1/order/:id/print', async (req: any, res: any) => {
+  try{
+    const PDFDocument = require('pdfkit');
+
+    const orderController = new OrderController(firebaseApp);
+
+    const order = await orderController.printOrder(req.params.id) as any;
+
+    const doc = new PDFDocument();
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=download.pdf');
+
+    doc.pipe(res);
+
+    doc.fontSize(25).text('Order ID: ' + order.id);
+    doc.fontSize(15).text('Name: ' + order.address.name);
+    doc.fontSize(15).text('Email: ' + order.address.email);
+    doc.fontSize(15).text('Address: ' + order.address.address);
+    doc.fontSize(15).text('Day: ' + order.address.day);
+    doc.fontSize(15).text('Time: ' + order.address.time);
+    doc.fontSize(20).text('Products');
+
+    order.products.forEach((product: any) => {
+      doc.fontSize(15).text(product.name + ' - ' + product.quantity);
+    });
+
+    doc.end();
+  }
+  catch(err: any){
+    res.status(400).send(err.message);
+  }
+});
+
+app.patch('/api/v1/order/:id', async (req: any, res: any) => {
+  try{
+    const orderController = new OrderController(firebaseApp);
+    const emailController = new EmailController();
+
+    const order = await orderController.updateOrder(req.params.id, req.body.status) as any;
+    await emailController
+    .sendEmailOrderStatus(
+      order.address.email,
+      order.address,
+      order.products,
+      req.body.status
+    );
+
+    res.status(200).send(order);
+  }
+  catch(err: any){
+    res.status(400).send(err.message);
+  }
+});
+
+app.post('/api/v1/make-order', async (req: any, res: any) => {
+  try{
+    const data = JSON.parse(req.body.data);
+    const orderController = new OrderController(firebaseApp);
+    const emailController = new EmailController();
+    const [id, email, address, products] = await orderController.makeOrder(data);
+    await emailController.sendEmailOrder(id, email, address, products);
+
+    res.status(200).send(
+      {
+        order: "success"
       }
     );
   }
